@@ -6,7 +6,7 @@ console.log('loaded');
   <section class="grid" style="min-height: 100vh">
     <LayoutSidebar />
     <div>
-      <!-- <slot /> -->
+      <slot />
     </div>
   </section>
 </template>
