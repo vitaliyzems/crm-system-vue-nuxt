@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/vue-query';
 import { KANBAN_DATA } from './kanban.data';
-import type { ICard } from './kanban.types';
 import type { IDeal } from '~/types/deals.types';
 
 export function useKanbanQuery() {
@@ -19,7 +18,7 @@ export function useKanbanQuery() {
             id: deal.$id,
             name: deal.name,
             price: deal.price,
-            companyName: deal.customer.name,
+            companyName: deal.customers.name,
             status: column.name,
           });
         }
