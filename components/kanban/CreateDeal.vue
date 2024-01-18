@@ -23,16 +23,6 @@ const props = withDefaults(
   { status: '' }
 );
 
-// const props = defineProps({
-//   status: {
-//     type: String,
-//     default: '',
-//   },
-//   refetch: {
-//     type: Function,
-//   },
-// });
-
 const { handleSubmit, defineField, handleReset } = useForm<IDealFormState>({
   initialValues: {
     status: props.status,

@@ -9,6 +9,8 @@ export function useKanbanQuery() {
     select(data) {
       const newBoard = [...KANBAN_DATA];
       const deals = data.documents as unknown as IDeal[];
+      console.log(deals);
+      console.log(newBoard);
 
       for (const deal of deals) {
         const column = newBoard.find((col) => col.id === deal.status);
@@ -18,7 +20,7 @@ export function useKanbanQuery() {
             id: deal.$id,
             name: deal.name,
             price: deal.price,
-            companyName: deal.customers.name,
+            companyName: deal.customer.name,
             status: column.name,
           });
         }
