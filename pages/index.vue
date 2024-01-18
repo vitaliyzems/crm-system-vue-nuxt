@@ -5,6 +5,7 @@ import type { ICard, IColumn } from '~/components/kanban/kanban.types';
 import { useKanbanQuery } from '~/components/kanban/useKanbanQuery';
 import type { EnumStatus } from '~/types/deals.types';
 import { DB_ID, COLLECTION_DEALS } from '#imports';
+import { generateColumnStyle } from '@/components/kanban/generate-gradient';
 
 type TypeMutationVariables = {
   docId: string;
@@ -55,8 +56,12 @@ function handleDrop(targetColumn: IColumn) {
           :key="column.id"
           @dragover="handleDragOver"
           @drop="() => handleDrop(column)"
+          class="min-h-screen"
         >
-          <div class="rounded bg-slate-700 py-1 px-5 mb-2 text-center">
+          <div
+            class="rounded bg-slate-700 py-1 px-5 mb-2 text-center"
+            :style="generateColumnStyle(index, data?.length)"
+          >
             {{ column.name }}
           </div>
           <div>

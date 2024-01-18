@@ -1,16 +1,19 @@
 import { useQuery } from '@tanstack/vue-query';
 import { KANBAN_DATA } from './kanban.data';
 import type { IDeal } from '~/types/deals.types';
+import type { IColumn } from './kanban.types';
 
 export function useKanbanQuery() {
   return useQuery({
     queryKey: ['deals'],
     queryFn: () => DB.listDocuments(DB_ID, COLLECTION_DEALS),
     select(data) {
-      const newBoard = [...KANBAN_DATA];
+      const newBoard: IColumn[] = KANBAN_DATA.map((column) => ({
+        ...column,
+        items: [],
+      }));
+
       const deals = data.documents as unknown as IDeal[];
-      console.log(deals);
-      console.log(newBoard);
 
       for (const deal of deals) {
         const column = newBoard.find((col) => col.id === deal.status);
