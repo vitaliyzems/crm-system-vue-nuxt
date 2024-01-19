@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useMutation } from '@tanstack/vue-query';
 import { v4 as uuid } from 'uuid';
-import { defineProps } from 'vue';
 import { COLLECTION_DEALS, DB_ID } from '#imports';
 import type { IDeal } from '~/types/deals.types';
 
@@ -22,16 +21,6 @@ const props = withDefaults(
   }>(),
   { status: '' }
 );
-
-// const props = defineProps({
-//   status: {
-//     type: String,
-//     default: '',
-//   },
-//   refetch: {
-//     type: Function,
-//   },
-// });
 
 const { handleSubmit, defineField, handleReset } = useForm<IDealFormState>({
   initialValues: {
