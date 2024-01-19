@@ -6,6 +6,7 @@ import { useKanbanQuery } from '~/components/kanban/useKanbanQuery';
 import type { EnumStatus } from '~/types/deals.types';
 import { DB_ID, COLLECTION_DEALS } from '#imports';
 import { generateColumnStyle } from '@/components/kanban/generate-gradient';
+import { useDealSlideStore } from '#imports';
 
 type TypeMutationVariables = {
   docId: string;
@@ -19,6 +20,7 @@ useSeoMeta({
 const dragCardRef = ref<ICard | null>(null);
 const sourseColumnRef = ref<IColumn | null>(null);
 const { data, isLoading, refetch } = useKanbanQuery();
+const store = useDealSlideStore();
 
 const { mutate } = useMutation({
   mutationKey: ['move card'],
@@ -73,7 +75,7 @@ function handleDrop(targetColumn: IColumn) {
               draggable="true"
               @dragstart="() => handleDragStart(card, column)"
             >
-              <UiCardHeader role="button">
+              <UiCardHeader role="button" @click="store.set(card)">
                 <UiCardTitle>
                   {{ card.name }}
                 </UiCardTitle>
@@ -91,6 +93,7 @@ function handleDrop(targetColumn: IColumn) {
           </div>
         </div>
       </div>
+      <KanbanSlideover />
     </div>
   </div>
 </template>
