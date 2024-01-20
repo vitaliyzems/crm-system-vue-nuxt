@@ -5,6 +5,10 @@ import { v4 as uuid } from 'uuid';
 import { DB_ID, COLLECTION_CUSTOMERS, STORAGE_ID } from '#imports';
 import type { ICustomer } from '~/types/deals.types';
 
+interface InputFileEvent extends Event {
+  target: HTMLInputElement;
+}
+
 interface ICustomerFormState
   extends Pick<ICustomer, 'name' | 'email' | 'avatar_url' | 'from_source'> {}
 
@@ -43,6 +47,15 @@ const { mutate, isPending } = useMutation({
     DB.updateDocument(DB_ID, COLLECTION_CUSTOMERS, customerId, data),
 });
 
+const { mutate: uploadImage, isPending: isUploadImagePending } = useMutation({
+  mutationKey: ['upload image'],
+  mutationFn: (file: File) => storage.createFile(STORAGE_ID, uuid(), file),
+  onSuccess(data) {
+    const response = storage.getFileDownload(STORAGE_ID, data.$id);
+    setFieldValue('avatar_url', response.href);
+  },
+});
+
 const onSubmit = handleSubmit((values) => {
   mutate(values);
 });
@@ -76,8 +89,28 @@ const onSubmit = handleSubmit((values) => {
         class="input"
       />
 
+      <img
+        v-if="values.avatar_url || isUploadImagePending"
+        :src="values.avatar_url"
+        alt=""
+        width="50"
+        height="50"
+        class="rounded-full my-4"
+      />
+
+      <div class="grid w-full max-w-sm items-center gap-1.5 input">
+        <label>
+          <div class="text-sm mb-2">Логотип</div>
+          <UiInput
+            type="file"
+            :onchange="(e: InputFileEvent) => e.target.files?.length && uploadImage(e.target.files[0])"
+            :disabled="isUploadImagePending"
+          />
+        </label>
+      </div>
+
       <UiButton :disabled="isPending" variant="secondary" class="mt-3">{{
-        isPending ? 'Загрузка...' : 'Сохранить...'
+        isPending ? 'Загрузка...' : 'Сохранить'
       }}</UiButton>
     </form>
   </div>
@@ -85,6 +118,6 @@ const onSubmit = handleSubmit((values) => {
 
 <style scoped>
 .input {
-  @apply border-[#161c26] mb-2 placeholder:text-[#748092] focus:border-border transition-colors;
+  @apply border-[#161c26] mb-4 placeholder:text-[#748092] focus:border-border transition-colors;
 }
 </style>
